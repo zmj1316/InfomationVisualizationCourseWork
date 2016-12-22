@@ -8,31 +8,47 @@
  */
 
 import React from 'react';
-import Home from './Home';
 import fetch from '../../core/fetch';
-import Layout from '../../components/Layout';
+import BubbleChart from '../../components/BubbleChart';
+import { DatePicker } from 'antd';
+import moment from 'moment';
+import { Row, Col } from 'antd';
+
+const { MonthPicker, RangePicker } = DatePicker;
+
+var mdata = [
+  {
+    _id: 0,
+    value: 1
+  }
+]
+const dateFormat = 'YYYY/MM/DD';
+
+const monthFormat = 'YYYY/MM';
 
 export default {
 
   path: '/',
 
   async action() {
-    const resp = await fetch('/graphql', {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: '{news{title,link,contentSnippet}}',
-      }),
-      credentials: 'include',
+    const resp = await fetch('/data', {
+      method: 'post'
     });
     const { data } = await resp.json();
-    if (!data || !data.news) throw new Error('Failed to load the news feed.');
     return {
-      title: 'React Starter Kit',
-      component: <Layout><Home news={data.news} /></Layout>,
+      title: 'InfoVis',
+      component:
+      <div>
+        <Row>
+          <Col span={12}>
+            <MonthPicker defaultValue={moment('2015/01', monthFormat)} format={monthFormat} />
+            <br />
+          </Col>
+        </Row>
+        <Row>
+          <BubbleChart data={data} />
+        </Row>
+      </div>,
     };
   },
 

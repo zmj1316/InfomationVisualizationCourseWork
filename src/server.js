@@ -73,6 +73,24 @@ app.get('/login/facebook/return',
   },
 );
 
+app.post('/data', (req, res) => {
+  var response = {
+    data: [
+      {
+        _id: 0,
+        value: 0.1
+      },
+      {
+        _id: 1,
+        value: 0.2
+      }
+    ]
+  }
+  console.log(response)
+  res.end(JSON.stringify(response));
+}
+)
+
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
@@ -144,7 +162,7 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
       title="Internal Server Error"
       description={err.message}
       style={errorPageStyle._getCss()} // eslint-disable-line no-underscore-dangle
-    >
+      >
       {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
     </Html>,
   );

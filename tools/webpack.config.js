@@ -64,7 +64,7 @@ const config = {
             // Externalise references to helpers and builtins,
             // automatically polyfilling your code without polluting globals.
             // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-runtime
-            'transform-runtime',
+            'transform-runtime','antd',
             ...!isDebug ? [] : [
               // Adds component stack to warning messages
               // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx-source
