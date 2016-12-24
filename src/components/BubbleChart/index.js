@@ -65,6 +65,7 @@ class BubbleChart extends React.Component {
                 data={this.props.data.map(d => ({
                     _id: d._id,
                     value: d.value,
+                    colorValue: d.value,
                     selected: d.select
                 }))}
                 />
