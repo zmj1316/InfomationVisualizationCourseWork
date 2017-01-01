@@ -11,12 +11,12 @@ const AM = React.createClass({
       loading: true
     };
   },
-  showModal(item) {
+  showModal(item,time) {
     this.setState({
       visible: true,
     });
     this.setState({...this.state,loading:true,ModalText:item._id,data:[]})
-    this.loadMails(item._id)
+    this.loadMails(item._id,time)
   },
   closeModal() {
     this.setState({
@@ -27,8 +27,8 @@ const AM = React.createClass({
     setAction(this.showModal)
   },
 
-  loadMails(keyword) {
-    fetch('/count' + '?keyword=' + keyword, {
+  loadMails(keyword,time) {
+    fetch('/count' + '?keyword=' + keyword +'&time=' + time, {
       method: 'get'
     }).then((res) => {
       return res.json()

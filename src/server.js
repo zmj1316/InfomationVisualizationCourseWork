@@ -80,20 +80,33 @@ app.get('/data', (req, res) => {
   }
   let fs = require('fs');
   let csv = require('csv');
+  if (req.query.time < "2010-01" || req.query.time > "2015-06") {
+    response.error = "No record"
+    res.end(JSON.stringify(response));
+  }
   console.log(req.query.time)
-  csv()
-    .from.stream(fs.createReadStream('./serverdata/' + req.query.time))
-    .to.array((data) => {
-      response.data = data.map(d => ({
-        _id: d[0],
-        value: d[1]
-      }))
-      res.end(JSON.stringify(response));
-    })
-    .on('error', function (error) {
+  fs.access('./serverdata/' + req.query.time, fs.R_OK | fs.W_OK, (err) => {
+    if (err) {
       response.error = "No record"
       res.end(JSON.stringify(response));
-    });
+    }
+    else {
+      csv()
+        .from.stream(fs.createReadStream('./serverdata/' + req.query.time))
+        .to.array((data) => {
+          response.data = data.map(d => ({
+            _id: d[0],
+            value: d[1],
+            before: d[2]
+          }))
+          res.end(JSON.stringify(response));
+        })
+        .on('error', function (error) {
+          response.error = "No record"
+          res.end(JSON.stringify(response));
+        });
+    }
+  });
 }
 )
 
@@ -103,18 +116,20 @@ app.get('/count', (req, res) => {
   }
   var sqlite3 = require('sqlite3');
   var db = new sqlite3.Database('./sqlite.db', function () {
-    db.all("select * from mail where subject like '%" + req.query.keyword + 
-    "%' ORDER BY date_sent LIMIT 15", function (err, sqlres) {
-      if (!err) {
-        response.data = sqlres
-        res.end(JSON.stringify(response));
-      }
-      else {
-        console.log(err);
-        response.error = "database error"
-        res.end(JSON.stringify(response));
-      }
-    });
+    db.all("select * from mail where subject like '%" + req.query.keyword +
+      "%'" + " AND date_sent > date(\"" + req.query.time + "-01 00:00:00\")" + " ORDER BY date_sent LIMIT 15", function (err, sqlres) {
+        if (!err) {
+          response.data = sqlres
+          res.end(JSON.stringify(response));
+        }
+        else {
+          console.log(err);
+          response.error = "database error"
+          console.log("select * from mail where subject like '%" + req.query.keyword +
+            "%'" + " AND date_sent > date(" + req.query.time + "-01 00:00:00)" + " ORDER BY date_sent LIMIT 15")
+          res.end(JSON.stringify(response));
+        }
+      });
   });
 
 })
@@ -158,22 +173,22 @@ app.get('*', async (req, res, next) => {
     }
 
     const data = { ...route };
-data.children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
-data.style = [...css].join('');
-data.scripts = [
-  assets.vendor.js,
-  assets.client.js,
-];
-if (assets[route.chunk]) {
-  data.scripts.push(assets[route.chunk].js);
-}
+    data.children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
+    data.style = [...css].join('');
+    data.scripts = [
+      assets.vendor.js,
+      assets.client.js,
+    ];
+    if (assets[route.chunk]) {
+      data.scripts.push(assets[route.chunk].js);
+    }
 
-const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
-res.status(route.status || 200);
-res.send(`<!doctype html>${html}`);
+    const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
+    res.status(route.status || 200);
+    res.send(`<!doctype html>${html}`);
   } catch (err) {
-  next(err);
-}
+    next(err);
+  }
 });
 
 //
