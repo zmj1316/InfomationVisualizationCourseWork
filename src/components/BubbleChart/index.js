@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import ReactBubbleChart from 'react-bubble-chart';
-import s from './style.css';
 
 const colorLegend = [
     // reds from dark to light
@@ -25,27 +24,21 @@ const colorLegend = [
     { color: "#08306b", textColor: '#deebf7', text: 'Positive' }
 ];
 
-// export default ({ data }) =>
-//   <ReactBubbleChart 
-//     colorLegend={colorLegend}
-//     legend={true}
-//     selectedColor="#737373"
-//     selectedTextColor="#d9d9d9"
-//     fixedDomain={{min: -1, max: 1}}
-//     data={data.map(d => ({
-//       _id: d._id,
-//       value: d.value,
-//       colorValue: d.sentiment,
-//       selected: d.selected
-//     }))}
-//   />
+var tooltipProps = [{
+    css: 'symbol',
+    prop: '_id'
+}
+// , {
+//     css: 'value',
+//     prop: 'value',
+//     display: 'Last Value'
+// }, {
+//     css: 'change',
+//     prop: 'colorValue',
+//     display: 'Change'
+// }
+];
 
-var mdata = [
-  {
-    _id: 0,
-    value: 0.2
-  }
-]
 
 class BubbleChart extends React.Component {
     static propTypes = {
@@ -54,7 +47,7 @@ class BubbleChart extends React.Component {
 
 
     render() {
-        console.log(this.props)
+        // console.log(this.props)
         return (
             <ReactBubbleChart
                 colorLegend={colorLegend}
@@ -68,6 +61,11 @@ class BubbleChart extends React.Component {
                     colorValue: d.value,
                     selected: d.select
                 }))}
+                duration={800}
+                delay={15}
+                tooltip={true}
+                tooltipProps={tooltipProps}
+                onClick = {this.props.onClick}
                 />
         );
     }

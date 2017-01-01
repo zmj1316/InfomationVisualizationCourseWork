@@ -43,7 +43,10 @@ const config = {
           cacheDirectory: isDebug,
 
           // https://babeljs.io/docs/usage/options/
-          babelrc: false,
+          babelrc: {
+            "plugins": [["import", { libraryName: "antd", style: "css" }]]
+          }
+          ,
           presets: [
             // Latest stable ECMAScript features
             // https://github.com/babel/babel/tree/master/packages/babel-preset-latest
@@ -64,7 +67,7 @@ const config = {
             // Externalise references to helpers and builtins,
             // automatically polyfilling your code without polluting globals.
             // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-runtime
-            'transform-runtime','antd',
+            'transform-runtime',
             ...!isDebug ? [] : [
               // Adds component stack to warning messages
               // https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-react-jsx-source

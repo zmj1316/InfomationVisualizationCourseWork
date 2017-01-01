@@ -9,45 +9,32 @@
 
 import React from 'react';
 import fetch from '../../core/fetch';
-import BubbleChart from '../../components/BubbleChart';
+import SuperBubble from '../../components/SuperBubble';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import { Row, Col } from 'antd';
 
 const { MonthPicker, RangePicker } = DatePicker;
-
-var mdata = [
-  {
-    _id: 0,
-    value: 1
-  }
-]
 const dateFormat = 'YYYY/MM/DD';
-
 const monthFormat = 'YYYY/MM';
+
 
 export default {
 
   path: '/',
-
+  getInitialState: function () {
+    return { time: '2010-11' };
+  },
   async action() {
-    const resp = await fetch('/data', {
-      method: 'post'
-    });
-    const { data } = await resp.json();
+    // const resp = await fetch('/data' + '?time=' + '2010-11', {
+    //   method: 'get'
+    // });
+
     return {
       title: 'InfoVis',
       component:
       <div>
-        <Row>
-          <Col span={12}>
-            <MonthPicker defaultValue={moment('2015/01', monthFormat)} format={monthFormat} />
-            <br />
-          </Col>
-        </Row>
-        <Row>
-          <BubbleChart data={data} />
-        </Row>
+        <SuperBubble/>
       </div>,
     };
   },

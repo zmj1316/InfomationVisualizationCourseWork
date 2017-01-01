@@ -1,12 +1,15 @@
+.datepick{
+  flex: 1;
+  position: relative;
+}
+
 /* Center the contents of the bubble chart */
 .bubble-chart-container {
-  height: 720px;
   flex: 1;
   position: relative;
   display: flex;
   user-select: none;
   justify-content: center;
-  background: #8F77B5;
 }
 
 /* Center text in the circle, and hide any overflow */
@@ -39,9 +42,4 @@
 /* Make sure to unhide the text when hovering */
 .bubble-chart-container .bubble-chart-text .bubble-label.small:hover {
   font-size: 0.8em;
-}
-
-.symbol {
-  font-size: 1.5em;
-  color: #111111;
 }

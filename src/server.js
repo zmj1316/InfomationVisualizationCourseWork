@@ -30,6 +30,7 @@ import routes from './routes';
 import assets from './assets'; // eslint-disable-line import/no-unresolved
 import { port, auth } from './config';
 
+
 const app = express();
 
 //
@@ -73,23 +74,50 @@ app.get('/login/facebook/return',
   },
 );
 
-app.post('/data', (req, res) => {
-  var response = {
-    data: [
-      {
-        _id: 0,
-        value: 0.1
-      },
-      {
-        _id: 1,
-        value: 0.2
-      }
-    ]
+app.get('/data', (req, res) => {
+  let response = {
+    data: []
   }
-  console.log(response)
-  res.end(JSON.stringify(response));
+  let fs = require('fs');
+  let csv = require('csv');
+  console.log(req.query.time)
+  csv()
+    .from.stream(fs.createReadStream('./serverdata/' + req.query.time))
+    .to.array((data) => {
+      response.data = data.map(d => ({
+        _id: d[0],
+        value: d[1]
+      }))
+      res.end(JSON.stringify(response));
+    })
+    .on('error', function (error) {
+      response.error = "No record"
+      res.end(JSON.stringify(response));
+    });
 }
 )
+
+app.get('/count', (req, res) => {
+  let response = {
+    data: []
+  }
+  var sqlite3 = require('sqlite3');
+  var db = new sqlite3.Database('./sqlite.db', function () {
+    db.all("select * from mail where subject like '%" + req.query.keyword + 
+    "%' ORDER BY date_sent LIMIT 15", function (err, sqlres) {
+      if (!err) {
+        response.data = sqlres
+        res.end(JSON.stringify(response));
+      }
+      else {
+        console.log(err);
+        response.error = "database error"
+        res.end(JSON.stringify(response));
+      }
+    });
+  });
+
+})
 
 //
 // Register API middleware
@@ -130,22 +158,22 @@ app.get('*', async (req, res, next) => {
     }
 
     const data = { ...route };
-    data.children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
-    data.style = [...css].join('');
-    data.scripts = [
-      assets.vendor.js,
-      assets.client.js,
-    ];
-    if (assets[route.chunk]) {
-      data.scripts.push(assets[route.chunk].js);
-    }
+data.children = ReactDOM.renderToString(<App context={context}>{route.component}</App>);
+data.style = [...css].join('');
+data.scripts = [
+  assets.vendor.js,
+  assets.client.js,
+];
+if (assets[route.chunk]) {
+  data.scripts.push(assets[route.chunk].js);
+}
 
-    const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
-    res.status(route.status || 200);
-    res.send(`<!doctype html>${html}`);
+const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
+res.status(route.status || 200);
+res.send(`<!doctype html>${html}`);
   } catch (err) {
-    next(err);
-  }
+  next(err);
+}
 });
 
 //
