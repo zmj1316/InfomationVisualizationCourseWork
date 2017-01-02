@@ -45,3 +45,8 @@
   font-size: 1.5em;
   color: #111111;
 }
+.brush1{
+  stroke: #000;
+  fill-opacity: .125;
+  background: #fff;
+}

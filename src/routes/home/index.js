@@ -10,9 +10,12 @@
 import React from 'react';
 import fetch from '../../core/fetch';
 import SuperBubble from '../../components/SuperBubble';
+import AreaChart from '../../components/AreaChart'
 import { DatePicker } from 'antd';
 import moment from 'moment';
-import { Row, Col } from 'antd';
+import { Row, Col,Tabs } from 'antd';
+const TabPane = Tabs.TabPane;
+
 
 const { MonthPicker, RangePicker } = DatePicker;
 const dateFormat = 'YYYY/MM/DD';
@@ -34,7 +37,12 @@ export default {
       title: 'InfoVis',
       component:
       <div>
-        <SuperBubble/>
+        <Tabs defaultActiveKey="1" onChange={(msg)=>console.log(msg)}>
+          <TabPane tab="Tab 1" key="1"><SuperBubble /></TabPane>
+          <TabPane tab="Tab 2" key="2"><AreaChart/></TabPane>
+        </Tabs>
+
+        
       </div>,
     };
   },

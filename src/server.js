@@ -134,6 +134,38 @@ app.get('/count', (req, res) => {
 
 })
 
+app.get('/line', (req, res) => {
+  let response = {
+    data: []
+  }
+  let fs = require('fs');
+  let csv = require('csv');
+  console.log(req.query.time)
+  fs.access('./serverdata/year_mail_count', (err) => {
+    if (err) {
+      response.error = "No record"
+      res.end(JSON.stringify(response));
+    }
+    else {
+      csv()
+        .from.stream(fs.createReadStream('./serverdata/year_mail_count'))
+        .to.array((data) => {
+          response.data = data.map(d => ({
+            time: d[0],
+            in: d[1],
+            out: d[2]
+          }))
+          res.end(JSON.stringify(response));
+        })
+        .on('error', function (error) {
+          response.error = "No record"
+          res.end(JSON.stringify(response));
+        });
+    }
+  });
+}
+)
+
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
