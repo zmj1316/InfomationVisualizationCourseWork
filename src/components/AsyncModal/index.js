@@ -39,7 +39,8 @@ const AM = React.createClass({
           d => ({
             key: d.id,
             subject: d.subject,
-            sent: d.date_sent
+            sent: d.date_sent,
+            name: d.to_dis
           })
         )
       })
@@ -59,6 +60,7 @@ const AM = React.createClass({
               this.state.data.map(d => (
                 <Row>
                   <Col>{d.subject}</Col>
+                  <Col>{d.name}</Col>
                   <Col>{d.sent}</Col>
                 </Row>
               ))
