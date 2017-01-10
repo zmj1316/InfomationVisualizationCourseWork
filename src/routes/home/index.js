@@ -10,10 +10,11 @@
 import React from 'react';
 import fetch from '../../core/fetch';
 import SuperBubble from '../../components/SuperBubble';
-import AreaChart from '../../components/AreaChart'
+import AreaChart from '../../components/AreaChart';
+import ForceGraph from '../../components/ForceGraph';
 import { DatePicker } from 'antd';
 import moment from 'moment';
-import { Row, Col,Tabs } from 'antd';
+import { Row, Col, Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 
 
@@ -25,7 +26,7 @@ const monthFormat = 'YYYY/MM';
 export default {
 
   path: '/',
-  getInitialState: function () {
+  getInitialState() {
     return { time: '2010-11' };
   },
   async action() {
@@ -36,14 +37,15 @@ export default {
     return {
       title: 'InfoVis',
       component:
-      <div>
-        <Tabs defaultActiveKey="1" onChange={(msg)=>console.log(msg)}>
-          <TabPane tab="Tab 1" key="1"><SuperBubble /></TabPane>
-          <TabPane tab="Tab 2" key="2"><AreaChart/></TabPane>
-        </Tabs>
+  <div>
+    <Tabs defaultActiveKey="1" onChange={(msg) => console.log(msg)}>
+      <TabPane tab="关键字" key="1"><SuperBubble /></TabPane>
+      <TabPane tab="数目与时间" key="2"><AreaChart /></TabPane>
+      <TabPane tab="力导图" key="3"><ForceGraph /></TabPane>
+    </Tabs>
 
-        
-      </div>,
+
+  </div>,
     };
   },
 
